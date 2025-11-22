@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Панель испытателя — SHT Laboratories</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(180deg, #f0f9ff, #f9fafb);
+      color: #0c4a6e;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background: #0c4a6e;
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+    .logout-btn {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+    .logout-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    .container {
+      max-width: 800px;
+      margin: 32px auto;
+      padding: 0 20px;
+      width: 100%;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .card h2 {
+      margin-top: 0;
+      color: #0c4a6e;
+      font-size: 1.3rem;
+    }
+    .card p, .card ul {
+      color: #334155;
+      line-height: 1.6;
+    }
+    .task-item {
+      padding: 12px 0;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      justify-content: space-between;
+    }
+    .task-item:last-child {
+      border-bottom: none;
+    }
+    .status {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .status-active { color: #059669; }
+    .status-pending { color: #d97706; }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #64748b;
+      font-size: 0.9rem;
+      margin-top: auto;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin: 16px 0;
+    }
+    li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Панель испытателя — SHT Laboratories</h1>
+  <button class="logout-btn" onclick="window.location.href='index.html'">Выйти</button>
+</header>
+
+<div class="container">
+  <div class="card">
+    <h2>Добро пожаловать в программу испытаний!</h2>
+    <p>Ваша заявка одобрена. Вы получили временный доступ к закрытому сегменту лаборатории SHT. Цель — участие в тестировании новых методов защиты информации и постквантовых криптографических алгоритмов.</p>
+    <p><strong>Статус доступа:</strong> <span class="status status-active">Активен (7 дней)</span></p>
+  </div>
+
+  <div class="card">
+    <h2>Ваши задачи</h2>
+    <div class="task-item">
+      <span>Ознакомиться с инструкцией по безопасности</span>
+      <span class="status status-active">Выполнено</span>
+    </div>
+    <div class="task-item">
+      <span>Пройти вводный тест по основам PQ-криптографии</span>
+      <span class="status status-pending">В работе</span>
+    </div>
+    <div class="task-item">
+      <span>Протестировать устойчивость модуля SHT-Crypto v1.3</span>
+      <span class="status status-pending">Ожидает начала</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Инструкции</h2>
+    <ul>
+      <li>Все задания выполняются через веб-интерфейс в течение 7 дней.</li>
+      <li>Результаты автоматически сохраняются в вашем профиле.</li>
+      <li>Не пытайтесь обойти систему защиты — все действия логируются.</li>
+      <li>При обнаружении уязвимости — заполните форму в разделе «Сообщить об ошибке».</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Конфиденциальность</h2>
+    <p>Вы обязуетесь не раскрывать содержание заданий, исходный код и любую другую информацию, полученную в ходе участия в программе. Нарушение ведёт к немедленному исключению и юридическим последствиям согласно NDA-SHT-2025.</p>
+  </div>
+</div>
+
+<footer>
+  &copy; 2025 SHT Laboratories — Защита будущего, уже сегодня.
+</footer>
+
+</body>
+</html>
