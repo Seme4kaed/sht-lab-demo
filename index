@@ -1,0 +1,434 @@
+<!-- ДЕМОНСТРАЦИОННЫЙ ПРОЕКТ. Авторизация имитируется в целях показа UI. 
+     Настоящая система безопасности требует серверной аутентификации. -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Лаборатория SHT</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(180deg, #e0e7ff, #f9fafb);
+      color: #111827;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      position: relative;
+    }
+    h1 {
+      font-size: 2rem;
+      color: #1e3a8a;
+    }
+    p {
+      max-width: 600px;
+      margin: 0 auto 20px;
+      color: #374151;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 360px;
+    }
+    input[type="email"], input[type="text"] {
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    button:hover {
+      background: #1d4ed8;
+    }
+    button:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+    .message {
+      margin-top: 16px;
+      color: #16a34a;
+      font-weight: 600;
+      display: none;
+    }
+    .btn-link {
+      display: inline-block;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: background 0.2s ease;
+      margin-top: 12px;
+    }
+    .btn-link:hover {
+      background: #1d4ed8;
+    }
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .checkbox-container label {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      color: #7597f6;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Кнопка "Я испытатель" -->
+<button id="testerBtn" style="
+  position: absolute;
+  top: 16px;
+  right: 135px;
+  background: #1e40af;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 100;
+  transition: background 0.2s;
+">Я испытатель</button>
+
+<!-- Модальное окно для испытателя -->
+<div id="testerModal" style="
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+">
+  <div style="
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 360px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    text-align: left;
+  ">
+    <h3 style="
+      margin: 0 0 20px 0;
+      font-size: 1.25rem;
+      color: #1e3a8a;
+      text-align: center;
+    ">Авторизация испытателя</h3>
+
+    <input type="text" id="testerLogin" placeholder="Логин" style="
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+    ">
+
+    <input type="password" id="testerPassword" placeholder="Пароль" style="
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      margin-bottom: 16px;
+    ">
+
+    <p id="testerError" style="
+      color: #dc2626;
+      font-size: 0.875rem;
+      margin: 0 0 16px 0;
+      min-height: 1.25rem;
+      text-align: center;
+      display: none;
+    "></p>
+
+    <div style="display: flex; gap: 10px;">
+      <button id="testerSubmit" style="
+        flex: 1;
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+      ">Войти</button>
+      <button class="closeTesterModal" style="
+        flex: 1;
+        background: #f1f5f9;
+        color: #334155;
+        border: 1px solid #cbd5e1;
+        padding: 10px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+      ">Отмена</button>
+    </div>
+  </div>
+</div>
+
+<!-- Кнопка "Я сотрудник" -->
+<button id="staffBtn" style="
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: #000000;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 100;
+  transition: background 0.2s;
+">Я сотрудник</button>
+
+<!-- Модальное окно для сотрудника -->
+<div id="staffModal" style="
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+">
+  <div style="
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 360px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    text-align: left;
+  ">
+    <h3 style="
+      margin: 0 0 20px 0;
+      font-size: 1.25rem;
+      color: #1e3a8a;
+      text-align: center;
+    ">Авторизация сотрудника</h3>
+
+    <input type="text" id="staffLogin" placeholder="Логин" style="
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+    ">
+
+    <input type="password" id="staffPassword" placeholder="Пароль" style="
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      margin-bottom: 16px;
+    ">
+
+    <p id="staffError" style="
+      color: #dc2626;
+      font-size: 0.875rem;
+      margin: 0 0 16px 0;
+      min-height: 1.25rem;
+      text-align: center;
+      display: none;
+    "></p>
+
+    <div style="display: flex; gap: 10px;">
+      <button id="staffSubmit" style="
+        flex: 1;
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+      ">Войти</button>
+      <button class="closeStaffModal" style="
+        flex: 1;
+        background: #f1f5f9;
+        color: #334155;
+        border: 1px solid #cbd5e1;
+        padding: 10px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+      ">Отмена</button>
+    </div>
+  </div>
+</div>
+
+<h1>SHT Laboratories</h1>
+<p>Исследования в области кибербезопасности, технологий защиты информации и цифровых инноваций.</p>
+<p>В настоящее время мы проводим отбор кандидатов на должность испытателей. Свободный доступ закрыт. Но вы можете оставить нам свой email, возможно, отберём именно Вас!</p>
+
+<form id="emailForm">
+  <input type="text" id="name1" name="name" placeholder="Введите ваше имя (ник)" required />
+  <input type="email" id="email" name="email" placeholder="Введите сюда эту почту proverka@mail.ru" required />
+
+  <div class="checkbox-container">
+    <input type="checkbox" id="persDan" required />
+    <label for="persDan">Я не принимаю условия обработки Персональных данных (они не передаются и Вы их не вводили)</label>
+  </div>
+
+  <button type="submit" id="submitBtn" disabled>Отправить</button>
+
+  <div class="message" id="message">
+    Заявка отправлена. Подтверждение отправлено на Вашу почту!
+    <p></p>
+    <p>Теперь Вы можете перейти на страницу с информацией для кандидатов</p>
+    <p></p>
+    <a href="Candidat.html" class="btn-link">Перейти на страницу для кандидатов</a>
+  </div>
+</form>
+<p></p>
+<p>Все заявки обрабатываются в ручном режиме. Не стоит отправлять больше одной.</p>
+
+<script>
+  // Общая логика формы
+  const checkbox = document.getElementById('persDan');
+  const submitBtn = document.getElementById('submitBtn');
+
+  checkbox.addEventListener('change', function() {
+    submitBtn.disabled = !this.checked;
+  });
+
+  document.getElementById('emailForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (checkbox.checked) {
+      document.getElementById('message').style.display = 'block';
+    }
+  });
+
+  // === Авторизация испытателя ===
+  const testerBtn = document.getElementById('testerBtn');
+  const testerModal = document.getElementById('testerModal');
+  const testerSubmit = document.getElementById('testerSubmit');
+  const closeTesterButtons = document.querySelectorAll('.closeTesterModal');
+
+  testerBtn.addEventListener('click', () => {
+    testerModal.style.display = 'flex';
+    document.getElementById('testerError').style.display = 'none';
+    document.getElementById('testerLogin').value = '';
+    document.getElementById('testerPassword').value = '';
+  });
+
+  closeTesterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      testerModal.style.display = 'none';
+    });
+  });
+
+  testerModal.addEventListener('click', (e) => {
+    if (e.target === testerModal) {
+      testerModal.style.display = 'none';
+    }
+  });
+
+  testerSubmit.addEventListener('click', () => {
+    const login = document.getElementById('testerLogin').value.trim();
+    const password = document.getElementById('testerPassword').value;
+    if (login === 'tester' && password === 'tester') {
+      window.location.href = 'tester.html';
+    } else {
+      const error = document.getElementById('testerError');
+      error.textContent = 'Неверный логин или пароль';
+      error.style.display = 'block';
+    }
+  });
+
+  document.getElementById('testerPassword').addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') {
+      testerSubmit.click();
+    }
+  });
+
+  // === Авторизация сотрудника ===
+  const staffBtn = document.getElementById('staffBtn');
+  const staffModal = document.getElementById('staffModal');
+  const staffSubmit = document.getElementById('staffSubmit');
+  const closeStaffButtons = document.querySelectorAll('.closeStaffModal');
+
+  staffBtn.addEventListener('click', () => {
+    staffModal.style.display = 'flex';
+    document.getElementById('staffError').style.display = 'none';
+    document.getElementById('staffLogin').value = '';
+    document.getElementById('staffPassword').value = '';
+  });
+
+  closeStaffButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      staffModal.style.display = 'none';
+    });
+  });
+
+  staffModal.addEventListener('click', (e) => {
+    if (e.target === staffModal) {
+      staffModal.style.display = 'none';
+    }
+  });
+
+  staffSubmit.addEventListener('click', () => {
+    const login = document.getElementById('staffLogin').value.trim();
+    const password = document.getElementById('staffPassword').value;
+    if (login === 'admin' && password === 'admin') {
+      window.location.href = 'staff.html';
+    } else {
+      const error = document.getElementById('staffError');
+      error.textContent = 'Неверный логин или пароль';
+      error.style.display = 'block';
+    }
+  });
+
+  document.getElementById('staffPassword').addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') {
+      staffSubmit.click();
+    }
+  });
+</script>
+</body>
+</html>
